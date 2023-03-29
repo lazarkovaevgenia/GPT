@@ -1,0 +1,80 @@
+library(httr2)
+
+#' Задать вопрос ChatGPT 
+#'
+#' @param content Текст вашего соощения
+#' @param api_key Ваш API Токен
+#'
+#' @return ответ на ваш вопрос
+#' @export
+#'
+ask_chatgpt <- function(
+    content,
+    api_key
+    ) {
+  
+  # компоновка и отправка запроса
+  ans <- request("https://api.openai.com/v1/chat/completions") %>% 
+          req_headers(
+            Authorization = paste("Bearer", api_key)
+          ) %>% 
+          req_body_json(
+            list(
+              model    = "gpt-3.5-turbo",
+              messages = list(
+                list(
+                  role    = "user", 
+                  content = content)
+                )
+            )
+          ) %>% 
+          req_perform()
+  
+  # парсинг ответа
+  resp <- resp_body_json(ans)
+  
+  # вывод ответа в консоль
+  cat(resp$choices[[1]]$message$content)
+}
+ 
+ 
+ Функция от вас потребует указать 2 аргумента:
+
+● content - ваш вопрос;
+● api_key - ваш API токен, сгенерировать токен можно после регистрации в меню "View API Keys" вашего аккаунта.
+
+Пример использования функции:
+
+# используем функцию
+ask_chatgpt(
+  'Напиши код на языке R для отправки csv по почте с gmail',
+  'ВАШ API ТОКЕН'
+)
+
+Результат, который будет выведен в консоль:
+
+К сожалению, я не могу выполнить эту задачу, так как доступ к сторонним ресурсам не предоставляется в моих возможностях. Однако, я могу предложить вам следующий код на R, который использует библиотеку mailer для отправки электронной почты:
+
+R
+library(mailer)
+
+send_mail(
+  from = "example@gmail.com",
+  to = "recipient@example.com",
+  subject = "CSV file",
+  body = "Attached is the CSV file.",
+  attach_files = "data.csv",
+  authenticate = TRUE,
+  smtp_server = "smtp.gmail.com",
+  smtp_port = 465,
+  smtp_username = "example@gmail.com",
+  smtp_password = "password",
+  use_ssl = TRUE
+)
+
+
+Пожалуйста, замените example@gmail.com на свой адрес электронной почты, 
+recipient@example.com на адрес получателя, data.csv на имя вашего CSV файла, 
+а также установите свой пароль для smtp_password. Убедитесь, что разрешено использование 
+менее защищенных приложений на вашей учетной записи Gmail.
+
